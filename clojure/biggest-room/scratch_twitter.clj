@@ -17,6 +17,9 @@
 
 ; retrieves the user stream, waits 1 minute and then cancels the async call
 (def ^:dynamic *response* (user-stream :oauth-creds my-creds))
+
+(meta *response*)
+
 (Thread/sleep 60000)
 ((:cancel (meta *response*)))
 

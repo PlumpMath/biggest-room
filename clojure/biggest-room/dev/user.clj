@@ -12,6 +12,16 @@
             [clojure.tools.namespace.repl :refer (refresh refresh-all)]
             [com.stuartsierra.component :as component]))
 
+(defrecord VOID []
+  component/Lifecycle
+  (start [component]
+    (println "START" component)
+    component)
+
+  (stop [component]
+    (println "STOP" component)
+    component))
+
 (def system
   "A Var containing an object representing the application under
   development."
@@ -21,7 +31,10 @@
   "Creates and initializes the system under development in the Var
   #'system."
   []
-  (alter-var-root #'system (constantly (app/example-system))))
+  (alter-var-root #'system (constantly (component/system-map
+                                        :app (component/using
+                                              (map->VOID {})
+                                              [])))))
 
 (defn start
   "Starts the system running, updates the Var #'system."
