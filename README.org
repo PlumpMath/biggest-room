@@ -1,0 +1,8 @@
+# -*- mode: org; mode: visual-line; -*-
+#+STARTUP: indent
+
+* THE BIGGEST ROOM IN THE WORLD
+** REFERENCES
+
+- [[https://github.com/matthiasn/BirdWatch][BirdWatch]] application.
+- [[https://github.com/adamwynne/twitter-api][twitter-api]] for Clojure.
