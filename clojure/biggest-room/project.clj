@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [clj-http "2.0.0"]
                  [com.stuartsierra/component "0.3.1"]
+                 [twitter-api "0.7.8"]
                  [org.clojure/data.json "0.2.6"]]
   :plugins [[cider/cider-nrepl "0.9.1"]
             [refactor-nrepl "1.1.0"]
