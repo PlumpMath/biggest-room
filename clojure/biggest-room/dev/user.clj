@@ -9,16 +9,8 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.test :as test]
-            [clojure.tools.namespace.repl :refer (refresh refresh-all)]))
-
-(defprotocol STOPPABLE
-  (stop-it [this]))
-
-(defn kick-off-thread []
-  (printf "Starting...")
-  (reify STOPPABLE
-    (stop-it [this]
-      (println "Stopping..."))))
+            [clojure.tools.namespace.repl :refer (refresh refresh-all)]
+            [com.stuartsierra.component :as component]))
 
 (def system
   "A Var containing an object representing the application under
@@ -29,24 +21,19 @@
   "Creates and initializes the system under development in the Var
   #'system."
   []
-  (alter-var-root #'system (constantly nil)))
+  (alter-var-root #'system (constantly (app/example-system))))
 
 (defn start
   "Starts the system running, updates the Var #'system."
   []
-  (alter-var-root #'system
-                  (constantly (kick-off-thread)))
+  (alter-var-root #'system component/start)
   )
 
 (defn stop
   "Stops the system if it is currently running, updates the Var
   #'system."
   []
-  (alter-var-root #'system
-                  (fn [s]
-                    (when s (stop-it s))
-                    nil)
-  ))
+  (alter-var-root #'system (fn [s] (when s (component/stop s)))))
 
 (defn go
   "Initializes and starts the system running."
