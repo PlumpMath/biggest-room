@@ -9,20 +9,11 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.test :as test]
-            [clojure.tools.namespace.repl :refer (refresh refresh-all)]
-            [com.stuartsierra.component :as component]))
+            [eu.cassiel.biggest-room.main :as main]
+            [com.stuartsierra.component :as component]
+            [clojure.tools.namespace.repl :refer (refresh refresh-all)]))
 
-(defrecord VOID []
-  component/Lifecycle
-  (start [component]
-    (println "START" component)
-    component)
-
-  (stop [component]
-    (println "STOP" component)
-    component))
-
-(def system
+(def S
   "A Var containing an object representing the application under
   development."
   nil)
@@ -31,22 +22,19 @@
   "Creates and initializes the system under development in the Var
   #'system."
   []
-  (alter-var-root #'system (constantly (component/system-map
-                                        :app (component/using
-                                              (map->VOID {})
-                                              [])))))
+  (alter-var-root #'S (constantly (main/system))))
 
 (defn start
   "Starts the system running, updates the Var #'system."
   []
-  (alter-var-root #'system component/start)
+  (alter-var-root #'S component/start)
   )
 
 (defn stop
   "Stops the system if it is currently running, updates the Var
   #'system."
   []
-  (alter-var-root #'system (fn [s] (when s (component/stop s)))))
+  (alter-var-root #'S (fn [s] (when s (component/stop s)))))
 
 (defn go
   "Initializes and starts the system running."

@@ -1,6 +1,6 @@
-(ns eu.cassiel.biggest-room-test
+(ns eu.cassiel.biggest-room.main-test
   (:require [clojure.test :refer :all]
-            [eu.cassiel.biggest-room :refer :all]))
+            [eu.cassiel.biggest-room.main :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

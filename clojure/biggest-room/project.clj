@@ -11,7 +11,7 @@
   :plugins [[cider/cider-nrepl "0.9.1"]
             [refactor-nrepl "1.1.0"]
             [lein-ring "0.9.7"]]
-  :main ^:skip-aot eu.cassiel.biggest-room
+  :main ^:skip-aot eu.cassiel.biggest-room.main
   :target-path "target/%s"
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [org.clojure/tools.nrepl "0.2.7"]]
