@@ -1,0 +1,6 @@
+# From https://apps.twitter.com
+twitter:
+  app-consumer-key: XXX
+  app-consumer-secret: XXX
+  user-access-token: XXX
+  user-access-token-secret: XXX
