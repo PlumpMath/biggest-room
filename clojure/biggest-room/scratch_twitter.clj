@@ -11,7 +11,7 @@
    [com.stuartsierra.component :as component]
    [eu.cassiel.biggest-room.main :as main])
   (:import
-   (twitter.callbacks.protocols AsyncStreamingCallback)))
+   (twitter.callbacks.protocols AsyncStreamingCallback SyncSingleCallback)))
 
 
 (reset)
@@ -34,15 +34,61 @@ user/my-creds
 
 (def A (atom nil))
 
+(defn hack-body-part [_ baos]
+  (try
+    (-> baos
+        str
+        json/read-json
+        :text)
+    (catch Exception exn (.getMessage exn))
+    )
+  )
+
+(defn hack-body-part [thing baos]
+  (try
+    {:thing thing
+     :data (-> baos str)}
+    (catch Exception exn (.getMessage exn))
+    )
+  )
+
 ; retrieves the user stream, waits 1 minute and then cancels the async call
 (def ^:dynamic *response* (user-stream
                            :oauth-creds my-creds
                            :callbacks (AsyncStreamingCallback. #_ (comp println #(:text %) json/read-json #(str %2))
-                                                               (fn [& x] (reset! A x))
+                                                               #(swap! A conj (hack-body-part %1 %2))
                                                                (comp println response-return-everything)
                                                                exception-print)))
 
-(nth @A 0)
+(def ^:dynamic *response* (statuses-filter
+                           :oauth-creds my-creds
+                           :params {:track "Trump"}
+                           :callbacks (AsyncStreamingCallback. #_ (comp println #(:text %) json/read-json #(str %2))
+                                                               #(swap! A conj (hack-body-part %1 %2))
+                                                               (comp println response-return-everything)
+                                                               exception-print)))
+
+(def ^:dynamic *response* (statuses-sample
+                           :oauth-creds my-creds
+                           :callbacks (AsyncStreamingCallback. #_ (comp println #(:text %) json/read-json #(str %2))
+                                                               #(swap! A conj (hack-body-part %1 %2))
+                                                               (comp println response-return-everything)
+                                                               exception-print)))
+
+(-> (deref user/A)
+    (nth 5)
+    :data
+
+    )
+
+(-> (deref user/A)
+    (nth 5)
+    :data
+    )
+
+(-> (deref user/A)
+    ;;count
+)
 
 (-> (nth @A 1)
     str
@@ -51,6 +97,7 @@ user/my-creds
 
 *response*
 (meta *response*)
+
 ((:cancel (meta *response*)))
 
 (:body (friendships-show :oauth-creds my-creds
@@ -82,3 +129,17 @@ user/my-creds
 *custom-streaming-callback*
 
 (println "A")
+
+
+;;---
+
+(friendships-show :oauth-creds my-creds
+                  :callbacks (SyncSingleCallback. response-return-body
+                                                  response-throw-error
+                                                  exception-rethrow)
+                  :params {:target-screen-name "cassieldotcom"})
+
+(statuses-sample :oauth-creds my-creds
+                 :callbacks (SyncSingleCallback. response-return-body
+                                                 response-throw-error
+                                                 exception-rethrow))
