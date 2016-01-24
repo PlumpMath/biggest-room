@@ -1,23 +1,12 @@
 (ns eu.cassiel.biggest-room.components.demo
-  (:require [com.stuartsierra.component :as component]))
+  (:require [com.stuartsierra.component :as component]
+            [eu.cassiel.biggest-room.lifecycle :refer [starting stopping]]))
 
 (defrecord DEMO [name running]
   component/Lifecycle
 
   (start [this]
-    (if running
-      (do
-        (println "(DEMO/start)")
-        this)
-      (do
-        (println "DEMO/start:" name)
-        (assoc this :running true))))
+    (starting this :on running :action #(assoc this :running true)))
 
   (stop [this]
-    (if running
-      (do
-        (println "DEMO/stop:" name)
-        (assoc this :running false))
-      (do
-        (println "(DEMO/stop)")
-        this))))
+    (stopping this :on running :action #(assoc this :running nil))))
