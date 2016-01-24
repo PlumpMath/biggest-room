@@ -76,9 +76,8 @@ user/my-creds
                                                                exception-print)))
 
 (-> (deref user/A)
-    (nth 5)
-    :data
-
+    (nth 0)
+    :thing
     )
 
 (-> (deref user/A)
@@ -87,7 +86,7 @@ user/my-creds
     )
 
 (-> (deref user/A)
-    ;;count
+    count
 )
 
 (-> (nth @A 1)
