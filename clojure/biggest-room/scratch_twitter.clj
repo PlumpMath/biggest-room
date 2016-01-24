@@ -47,7 +47,7 @@ user/my-creds
 (defn hack-body-part [thing baos]
   (try
     {:thing thing
-     :data (-> baos str)}
+     :data baos}
     (catch Exception exn (.getMessage exn))
     )
   )
@@ -76,12 +76,12 @@ user/my-creds
                                                                exception-print)))
 
 (-> (deref user/A)
-    (nth 0)
-    :thing
-    )
+    (nth 18)
+    :data
+)
 
 (-> (deref user/A)
-    (nth 5)
+    (nth 7)
     :data
     )
 

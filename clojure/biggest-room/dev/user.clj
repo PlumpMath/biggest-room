@@ -20,19 +20,19 @@
 
 (defn init
   "Creates and initializes the system under development in the Var
-  #'system."
+  #'S."
   []
   (alter-var-root #'S (constantly (main/system))))
 
 (defn start
-  "Starts the system running, updates the Var #'system."
+  "Starts the system running, updates the Var #'S."
   []
   (alter-var-root #'S component/start)
   )
 
 (defn stop
   "Stops the system if it is currently running, updates the Var
-  #'system."
+  #'S."
   []
   (alter-var-root #'S (fn [s] (when s (component/stop s)))))
 

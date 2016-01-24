@@ -9,6 +9,8 @@
                  [twitter-api "0.7.8"]
                  [clojurewerkz/propertied "1.2.0"]
                  [org.clojure/data.json "0.2.6"]
+                 [jarohen/chime "0.1.9"]
+                 [com.taoensso/nippy "2.10.0"]
                  [clj-yaml "0.4.0"]]
   :plugins [[cider/cider-nrepl "0.9.1"]
             [refactor-nrepl "1.1.0"]
