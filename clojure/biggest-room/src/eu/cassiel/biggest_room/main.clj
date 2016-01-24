@@ -3,6 +3,7 @@
   (:require [com.stuartsierra.component :as component]
             [eu.cassiel.biggest-room.components.demo :as demo]
             [eu.cassiel.biggest-room.components.config :as config]
+            [eu.cassiel.biggest-room.components.storage :as storage]
             [eu.cassiel.biggest-room.components.feeder :as feeder]))
 
 (defn system []
@@ -10,9 +11,12 @@
    :config (component/using
             (config/map->CONFIG {})
             [])
+   :storage (component/using
+             (storage/map->STORAGE {})
+             [:config])
    :feeder (component/using
             (feeder/map->FEEDER {})
-            [:config])
+            [:config :storage])
    :app (component/using
          (demo/map->DEMO {:name "Hello"})
          []))  )

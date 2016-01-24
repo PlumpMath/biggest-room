@@ -2,7 +2,7 @@
   "Feed from Twitter. Periodically turn on a stream for a few seconds."
   (:require [com.stuartsierra.component :as component]
             [eu.cassiel.biggest-room.lifecycle :refer [starting stopping]]
-            [eu.cassiel.biggest-room [storage :as storage]]
+            [eu.cassiel.biggest-room.components [storage :as storage]]
             [twitter.oauth :as oauth]
             [twitter.callbacks.handlers :as h]
             [twitter.api.streaming :as streaming]
@@ -17,10 +17,7 @@
 ;; FEEDER_PASS is a component, but one that we start and stop repeatedly
 ;; to take a feed and update our state atom.
 
-(defrecord FEEDER_PASS [config credentials response state*]
-  Object
-  (toString [this] "[FEEDER_PASS]")
-
+(defrecord FEEDER_PASS [config storage credentials response]
   component/Lifecycle
   (start [this]
     (starting this
@@ -38,12 +35,11 @@
                                        (try
                                          (do
                                            ;; LOTS of defensive coding here:
-                                           (println "ping!")
                                            (when-let [x (-> baos
                                                             str
                                                             json/read-json)]
                                              (when (instance? java.util.Map x)
-                                               (swap! state* conj x))))
+                                               (storage/put! storage x))))
                                          (catch Exception exn
                                            nil)))
 
@@ -71,7 +67,7 @@
                                 :credentials nil
                                 :response nil)))))
 
-(defrecord FEEDER [config subsystem* ch]
+(defrecord FEEDER [config storage subsystem* ch]
   component/Lifecycle
   (start [this]
     (starting this
@@ -79,21 +75,19 @@
 
               :action
               #(do
-                 (let [state* (atom (storage/read-store config))
-                       ch (chime-ch (periodic-seq (t/now)
+                 (let [ch (chime-ch (periodic-seq (t/now)
                                                   (-> 60 t/seconds)))
-                       _ (reset! state* nil)
                        subsystem* (atom (component/system-map
                                          :feeder-pass (component/using
                                                        (map->FEEDER_PASS {:config config
-                                                                          :state* state*})
+                                                                          :storage storage})
                                                        [])))]
                    (go-loop [] (when-let [t (<! ch)]
                                  (println "Chiming at" t)
                                  (swap! subsystem* component/start)
                                  (future (Thread/sleep 5000)
                                          (swap! subsystem* component/stop)
-                                         (storage/write-store config (deref state*)))
+                                         (storage/flush! storage))
                                  (recur)))
 
                    (assoc this

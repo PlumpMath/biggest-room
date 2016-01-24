@@ -1,19 +1,21 @@
 (ns eu.cassiel.biggest-room.lifecycle)
 
+(def pad (partial format "%20s: "))
+
 (defn starting [component & {:keys [on action]}]
   (if on
     (do
-      (println "   already running: " (class component))
+      (println (pad "already running") (class component))
       component)
     (do
-      (println "              + >>: " (class component))
+      (println (pad "+ >>") (class component))
       (action))))
 
 (defn stopping [component & {:keys [on action]}]
   (if on
     (do
-      (println "              << -: " (class component))
+      (println (pad "<< -") (class component))
       (action))
     (do
-      (println "   already stopped: " (class component))
+      (println (pad "already stopped") (class component))
       component)))
