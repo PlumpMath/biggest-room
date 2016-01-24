@@ -1,0 +1,7 @@
+-*- mode: org; mode: visual-line; -*-
+#+STARTUP: indent
+
+* TO DO [0/2]
+
+- [ ] Writing the data store to resources isn't a good idea if we want to run from an Uberjar.
+- [ ] Are we robust if the Twitter feed pass falls over (or doesn't launch)?

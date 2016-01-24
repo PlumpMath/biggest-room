@@ -3,17 +3,17 @@
 (defn starting [component & {:keys [on action]}]
   (if on
     (do
-      (println "   already running: " component)
+      (println "   already running: " (class component))
       component)
     (do
-      (println "              + >>: " component)
+      (println "              + >>: " (class component))
       (action))))
 
 (defn stopping [component & {:keys [on action]}]
   (if on
     (do
-      (println "              << -: " component)
+      (println "              << -: " (class component))
       (action))
     (do
-      (println "   already stopped: " component)
+      (println "   already stopped: " (class component))
       component)))

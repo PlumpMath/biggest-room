@@ -4,3 +4,5 @@ twitter:
   app-consumer-secret: XXX
   user-access-token: XXX
   user-access-token-secret: XXX
+# Storage relative to wherever in resources we find this actual config file:
+storage: my-storage.bin

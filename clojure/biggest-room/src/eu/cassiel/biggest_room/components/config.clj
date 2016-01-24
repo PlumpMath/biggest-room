@@ -10,11 +10,12 @@
   (start [this]
     (starting this
               :on entries
-              :action #(assoc this :entries (-> (io/resource "config.yaml")
-                                                slurp
-                                                yaml/parse-string))))
+              :action #(let [res (io/resource "config.yaml")]
+                         (assoc this
+                                :entries (-> res
+                                             slurp
+                                             yaml/parse-string)
+                                :my-file (-> res (.toURI) (java.io.File.))))))
 
   (stop [this]
-    (stopping this
-              :on entries
-              :action #(assoc this :entries nil))))
+    this))
